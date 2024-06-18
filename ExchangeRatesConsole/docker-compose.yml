@@ -1,0 +1,21 @@
+services:
+    consoleapp:
+        build: .
+        container_name: exchange-rates-console
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
+
+    mssqlserver:
+        build: ./Database
+        container_name: ms-sql-server
+        restart: always
+        environment:
+        - SA_PASSWORD=p7OzUlIM
+        - ACCEPT_EULA=Y
+        ports:
+        - "5434:1433"
+        volumes:
+        - sqldata:/var/opt/mssql
+
+volumes:
+    sqldata:

@@ -3,6 +3,9 @@
 */
 use ExchangeRates
 go
+if object_id('spGetExchangeRatesDates') IS NULL
+    exec('create procedure dbo.spGetExchangeRatesDates as set nocount on;')
+go
 create procedure dbo.spGetExchangeRatesDates
 	 @start_date date
 	,@end_date date

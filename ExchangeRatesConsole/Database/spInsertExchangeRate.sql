@@ -3,14 +3,17 @@
 */
 use ExchangeRates
 go
-create procedure dbo.spInsertExchangeRate
+if object_id('spInsertExchangeRate') IS NULL
+    exec('create procedure dbo.spInsertExchangeRate as set nocount on;')
+go
+alter procedure dbo.spInsertExchangeRate
 	 @external_id varchar(20) -- внешний id из цб
 	,@iso_num_code int -- цифровой код iso
 	,@iso_char_code varchar(10) -- буквенный код iso
 	,@nominal int -- номинал
 	,@name varchar(100) -- имя валюты
-	,@rate decimal(24,2) -- значение
-	,@rate_with_nominal decimal(24,2) -- значение с учётом номинала
+	,@rate decimal(24,4) -- значение
+	,@rate_with_nominal decimal(24,4) -- значение с учётом номинала
 	,@date date -- дата курса валюты
 with encryption
 as

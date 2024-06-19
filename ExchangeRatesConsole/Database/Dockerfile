@@ -1,23 +1,18 @@
-#взято с https://stackoverflow.com/questions/46888045/docker-mssql-server-linux-how-to-launch-sql-file-during-build-from-dockerfi
+#взято с https://stackoverflow.com/questions/69941444/how-to-have-docker-compose-init-a-sql-server-database
 FROM mcr.microsoft.com/mssql/server:2017-latest
 
-RUN mkdir -p /opt/mssql-scripts
+WORKDIR /usr/src/app
 
-COPY createTablesScript.sql /opt/mssql-scripts
-COPY spGetExchangeRatesDates.sql /opt/mssql-scripts
-COPY spInsertExchangeRate.sql /opt/mssql-scripts
+COPY createTablesScript.sql /usr/src/app
+COPY Dockerfile /usr/src/app
+COPY entrypoint.sh /usr/src/app
+COPY run-initialization.sh /usr/src/app
+COPY spGetExchangeRatesDates.sql /usr/src/app
+COPY spInsertExchangeRate.sql /usr/src/app
 
 ENV MSSQL_SA_PASSWORD=p7OzUlIM
 ENV ACCEPT_EULA=N
 
-RUN ( /opt/mssql/bin/sqlservr --accept-eula & ) | sleep 20 \
-    && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'p7OzUlIM' -i /opt/mssql-scripts/createTablesScript.sql \
-    && pkill sqlservr 
+EXPOSE 1433
 
-RUN ( /opt/mssql/bin/sqlservr --accept-eula & ) & sleep 10 \
-    && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'p7OzUlIM' -i /opt/mssql-scripts/spGetExchangeRatesDates.sql \
-    && pkill sqlservr 
-
-RUN ( /opt/mssql/bin/sqlservr --accept-eula & ) & sleep 10 \
-    && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'p7OzUlIM' -i /opt/mssql-scripts/spInsertExchangeRate.sql \
-    && pkill sqlservr 
+CMD /bin/bash ./entrypoint.sh

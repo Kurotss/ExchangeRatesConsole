@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 
 namespace ExchangeRatesConsole
 {
-	internal class Program
+    internal class Program
 	{
 		static void Main(string[] args)
 		{
@@ -49,7 +49,7 @@ namespace ExchangeRatesConsole
 		public static void InsertExchangeRatesLastMonth(DateTime date, ExchangeRateProcedures exchangeRateProcedures)
 		{
 			var startDate = date.AddDays(-30);
-			var endDate = date.AddDays(-1);
+			var endDate = date;
 			HashSet<DateTime> dates = exchangeRateProcedures.GetExchangeRatesDates(startDate, endDate);
 
 			for (DateTime currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
